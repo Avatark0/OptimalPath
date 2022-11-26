@@ -14,8 +14,8 @@ public class EnemySpawner : MonoBehaviour
     }
 
     private Vector3 spawnPos(){
-        int x = -8;
-        int y = Random.Range(-4,5);
+        int x = 0;
+        int y = Random.Range(0,9);
 
         return new Vector3(x, y, 0);
     }
