@@ -6,6 +6,7 @@ TagManager:
   tags:
   - enemy
   - GridBox
+  - GameGraph
   layers:
   - Default
   - TransparentFX
