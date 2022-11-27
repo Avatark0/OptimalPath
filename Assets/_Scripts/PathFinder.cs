@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class PathFinder : MonoBehaviour
 {
+    // The screen dimensions
     public int gridWidth;
     public int gridHeight;
 
-    public static PathNode[,] grid;
+    // A representation of the game area's graph
+    [SerializeField] private static PathNode[,] grid;
+
+    private bool hitTarget;
 
     void Start(){
         grid = new PathNode[gridWidth, gridHeight];
@@ -17,14 +21,24 @@ public class PathFinder : MonoBehaviour
                 grid[i,j] = new PathNode();
             }
         }
-        Debug.Log($"grid[0,0].x = {grid[0,0].x}");
     }
 
     public Path FindOptimalPath(PathNode currentPos, PathNode targetPos){
-        PathNode[] openList;
-        PathNode[] closedList;
         Path optimalPath = new Path();
         
+        StartCoroutine(CalculatePath(optimalPath));
+
         return optimalPath;
+    }
+
+
+    public IEnumerator CalculatePath(Path optimalPath){
+        PathNode[] openList;
+        PathNode[] closedList;
+
+        if(hitTarget)
+            yield break;
+        
+        yield return null;
     }
 }
