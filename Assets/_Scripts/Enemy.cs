@@ -5,11 +5,12 @@ using System;
 
 public class Enemy : MonoBehaviour
 { 
-    public PathNode currentPos;
-    public PathNode targetPos;
-    private const int NEXTITEM = 1;
-
     public PathFinder pathFinder;
+    public PathNode currentNode;
+    public PathNode targetNode;
+
+    public Vector2 currentPos;
+    public Vector2 targetPos;
 
     public float movSpeed;
     public bool isMoving;
@@ -18,14 +19,24 @@ public class Enemy : MonoBehaviour
     private bool hasPath;
 
     void Start(){
-        if(pathFinder == null)
-            pathFinder = GameObject.FindGameObjectsWithTag("PathFinder")[0].GetComponent<PathFinder>();
+        if(pathFinder == null){
+            pathFinder = GetComponent<PathFinder>();
+        }
+
+        currentPos.x = transform.position.x;
+        currentPos.y = transform.position.y;
+
+        Vector3 tPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
+        targetPos = tPos;
+
+        currentNode = pathFinder.GetNodeFromPos(currentPos);
+        targetNode = pathFinder.GetNodeFromPos(targetPos);
     }
 
     void Update()
     {
         if(!hasPath){
-            myPath = pathFinder.FindOptimalPath(currentPos, targetPos);
+            myPath = pathFinder.FindOptimalPath(currentNode, targetNode);
             hasPath = true;
         }
         else if(myPath.reachesTarget){
@@ -36,10 +47,6 @@ public class Enemy : MonoBehaviour
     private void move(){
         isMoving = true;
 
-        Debug.Log($"I'm moving from {currentPos} to {myPath.nodeList[NEXTITEM]}");
-
-        if(currentPos == myPath.nodeList[NEXTITEM]){
-            isMoving = false;
-        }
+        Debug.Log($"I'm moving from {currentPos} to {myPath.pathList.First}");
     }
 }

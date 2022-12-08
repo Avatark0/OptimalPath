@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class Path
 {
-    public List<PathNode> nodeList;
-    public PathNode nodePos;
+    public LinkedList<PathNode> pathList;
+
+    public PathNode currentNode;
+    public PathNode targetNode;
+
     public bool reachesTarget;
+
+    public Path(PathNode _currentNode, PathNode _targetNode){
+        currentNode = _currentNode;
+        targetNode = _targetNode;
+        
+        pathList = new LinkedList<PathNode>();
+    }
 }
