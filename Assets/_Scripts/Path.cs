@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Path
 {
-    public LinkedList<PathNode> pathList;
+    public LinkedList<PathNode> iterationPath;
+    public LinkedList<PathNode> optimalPath;
 
     public PathNode currentNode;
     public PathNode targetNode;
@@ -14,7 +15,7 @@ public class Path
     public Path(PathNode _currentNode, PathNode _targetNode){
         currentNode = _currentNode;
         targetNode = _targetNode;
-        
+
         pathList = new LinkedList<PathNode>();
     }
 }

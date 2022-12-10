@@ -15,6 +15,9 @@ public class PathFinder : MonoBehaviour
     LinkedList<PathNode> openList;
     LinkedList<PathNode> closedList;
 
+    // Dicionario de nodes vizinhos
+    NeighborNodes neighborNodes;
+
     private bool hitTarget;
     private int nodeCounter;
 
@@ -31,6 +34,8 @@ public class PathFinder : MonoBehaviour
 
         openList = new LinkedList<PathNode>();
         closedList = new LinkedList<PathNode>();
+
+        neighborNodes = new NeighborNodes();
     }
 
     private PathNode GetNodeFromPos(Vector2 pos){
@@ -53,22 +58,23 @@ public class PathFinder : MonoBehaviour
 
 
     public IEnumerator CalculatePath(Path optimalPath){
-        // Inicializa a Lista aberta
-        GetNeighborNodes(optimalPath.currentNode);
+        // Inicializa a Lista aberta a partir do nó atual
+        IterateNeighborNodes(optimalPath.currentNode);
 
         // Laço para explorar a lista aberta
         while(openList.First != null){
-            PathNode currentNode = openList.First.Value;
+            PathNode nextNode = openList.First.Value;
             openList.RemoveFirst();
-            closedList.AddFirst(currentNode);
-            optimalPath.pathList.AddFirst(currentNode);
+            closedList.AddFirst(nextNode);
 
-            if(currentNode.Equals(optimalPath.targetNode)){
+            optimalPath.iterationPath.AddFirst(nextNode);
+
+            if(nextNode.Equals(optimalPath.targetNode)){
                 Debug.Log("Achei!");
                 yield break;
             }
 
-            GetNeighborNodes(currentNode);
+            IterateNeighborNodes(nextNode);
         }
 
         Debug.Log("Não achei...");
@@ -76,51 +82,38 @@ public class PathFinder : MonoBehaviour
         yield return null;
     }
 
-    private void GetNeighborNodes(PathNode pos){
+    private void IterateNeighborNodes(PathNode pos){
+        neighborNodes.ResetDictionary(); // Guarantees that unset values ​​will be null
         if(pos.x > 0){
-            PathNode back = grid[pos.x - 1, pos.y];
-            if(back.IsWalkable() && !IsInList(back, closedList) && !IsInList(back, openList)){
-                openList.AddFirst(back);
-
-                Debug.Log("back");
-                PathVisualizer.SpawnPathSprite(back, nodeCounter++);
-            }
+            neighborNodes.dictionary["back"] = grid[pos.x - 1, pos.y];
         }
-
         if(pos.y > 0){
-            PathNode down = grid[pos.x, pos.y - 1];
-            if(down.IsWalkable() && !IsInList(down, closedList) && !IsInList(down, openList)){
-                openList.AddFirst(down);
-
-                Debug.Log("down");
-                PathVisualizer.SpawnPathSprite(down, nodeCounter++);
-            }
+            neighborNodes.dictionary["down"] = grid[pos.x, pos.y - 1];
         }
-
         if(pos.y < gridHeight - 1){
-            PathNode up = grid[pos.x, pos.y + 1];
-            if(up.IsWalkable() && !IsInList(up, closedList) && !IsInList(up, openList)){
-                openList.AddFirst(up);
-
-                Debug.Log("up");
-                PathVisualizer.SpawnPathSprite(up, nodeCounter++);
-            }
+            neighborNodes.dictionary["up"] = grid[pos.x, pos.y + 1];
         }
-
         if(pos.x < gridWidth - 1){
-            PathNode front = grid[pos.x + 1, pos.y];
-            if(front.IsWalkable() && !IsInList(front, closedList) && !IsInList(front, openList)){
-                openList.AddFirst(front);
-
-                Debug.Log("front");
-                PathVisualizer.SpawnPathSprite(front, nodeCounter++);
+            neighborNodes.dictionary["front"] = grid[pos.x + 1, pos.y];
+        }
+        foreach(KeyValuePair<string, PathNode> node in neighborNodes.dictionary){
+            if(node.Value != null && node.Value.IsWalkable()){
+                if(!InList(node.Value, closedList) && !InList(node.Value, openList)){
+                    aStar(node.Value);
+                }
             }
         }
     }
 
-    private bool IsInList(PathNode node, LinkedList<PathNode> list){
+    private void aStar(PathNode node){
+        PriorityQueue
+        openList.AddFirst(node);
+        PathVisualizer.SpawnPathSprite(node, nodeCounter++);
+    }
+
+    private bool InList(PathNode node, LinkedList<PathNode> list){
         foreach(PathNode listNode in list){
-            if(node.id == listNode.id){
+            if(node.Index == listNode.Index){
                 return true;
             }
         }
