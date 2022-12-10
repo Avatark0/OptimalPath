@@ -12,7 +12,7 @@ public class PathNode
     public PathNode(int _x, int _y){
         x = _x;
         y = _y;
-        id = x * 100 + y;
+        id = x * 10 + y;
         isWall = false;
     }
 

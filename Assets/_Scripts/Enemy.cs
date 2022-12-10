@@ -6,8 +6,6 @@ using System;
 public class Enemy : MonoBehaviour
 { 
     public PathFinder pathFinder;
-    public PathNode currentNode;
-    public PathNode targetNode;
 
     public Vector2 currentPos;
     public Vector2 targetPos;
@@ -23,20 +21,14 @@ public class Enemy : MonoBehaviour
             pathFinder = GetComponent<PathFinder>();
         }
 
-        currentPos.x = transform.position.x;
-        currentPos.y = transform.position.y;
-
-        Vector3 tPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
-        targetPos = tPos;
-
-        currentNode = pathFinder.GetNodeFromPos(currentPos);
-        targetNode = pathFinder.GetNodeFromPos(targetPos);
+        currentPos = transform.position;
+        targetPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
     }
 
     void Update()
     {
         if(!hasPath){
-            myPath = pathFinder.FindOptimalPath(currentNode, targetNode);
+            myPath = pathFinder.FindOptimalPath(currentPos, targetPos);
             hasPath = true;
         }
         else if(myPath.reachesTarget){

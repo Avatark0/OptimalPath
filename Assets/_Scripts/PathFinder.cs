@@ -16,8 +16,10 @@ public class PathFinder : MonoBehaviour
     LinkedList<PathNode> closedList;
 
     private bool hitTarget;
+    private int nodeCounter;
 
-    public void Awake() {
+
+    private void Awake() {
         if(grid == null){
             grid = new PathNode[gridWidth, gridHeight];
             for(int i = 0; i < gridWidth; i++){
@@ -31,19 +33,20 @@ public class PathFinder : MonoBehaviour
         closedList = new LinkedList<PathNode>();
     }
 
-    public PathNode GetNodeFromPos(Vector2 pos){
+    private PathNode GetNodeFromPos(Vector2 pos){
         int x = Mathf.RoundToInt(pos.x);
         int y = Mathf.RoundToInt(pos.y);
        
         return grid[x, y];
     }
 
-    public Path FindOptimalPath(PathNode currentPos, PathNode targetPos){
-        Path optimalPath = new Path(currentPos, targetPos);
+    public Path FindOptimalPath(Vector2 currentPos, Vector2 targetPos){
+        PathNode currentNode = GetNodeFromPos(currentPos);
+        PathNode targetNode = GetNodeFromPos(targetPos);
+
+        Path optimalPath = new Path(currentNode, targetNode);
         
         StartCoroutine(CalculatePath(optimalPath));
-
-        Debug.Log($"PathFinder: {optimalPath.pathList.Count}");
 
         return optimalPath;
     }
@@ -55,54 +58,69 @@ public class PathFinder : MonoBehaviour
 
         // Laço para explorar a lista aberta
         while(openList.First != null){
-            optimalPath.pathList.AddFirst(openList.First.Value);
+            PathNode currentNode = openList.First.Value;
+            openList.RemoveFirst();
+            closedList.AddFirst(currentNode);
+            optimalPath.pathList.AddFirst(currentNode);
 
-            if(openList.First.Equals(optimalPath.targetNode)){
+            if(currentNode.Equals(optimalPath.targetNode)){
+                Debug.Log("Achei!");
                 yield break;
             }
 
-            GetNeighborNodes(openList.First.Value);
-
-            closedList.AddFirst(openList.First.Value);
-            openList.RemoveFirst();
+            GetNeighborNodes(currentNode);
         }
+
+        Debug.Log("Não achei...");
         
         yield return null;
     }
 
     private void GetNeighborNodes(PathNode pos){
-        if(pos.x != 0){
+        if(pos.x > 0){
             PathNode back = grid[pos.x - 1, pos.y];
-            if(back.IsWalkable() && !IsInClosedList(back)){
+            if(back.IsWalkable() && !IsInList(back, closedList) && !IsInList(back, openList)){
                 openList.AddFirst(back);
+
+                Debug.Log("back");
+                PathVisualizer.SpawnPathSprite(back, nodeCounter++);
             }
         }
 
-        if(pos.y != 0){
+        if(pos.y > 0){
             PathNode down = grid[pos.x, pos.y - 1];
-            if(down.IsWalkable() && !IsInClosedList(down)){
+            if(down.IsWalkable() && !IsInList(down, closedList) && !IsInList(down, openList)){
                 openList.AddFirst(down);
+
+                Debug.Log("down");
+                PathVisualizer.SpawnPathSprite(down, nodeCounter++);
             }
         }
 
-        if(pos.y != gridHeight - 1){
+        if(pos.y < gridHeight - 1){
             PathNode up = grid[pos.x, pos.y + 1];
-            if(up.IsWalkable() && !IsInClosedList(up)){
+            if(up.IsWalkable() && !IsInList(up, closedList) && !IsInList(up, openList)){
                 openList.AddFirst(up);
+
+                Debug.Log("up");
+                PathVisualizer.SpawnPathSprite(up, nodeCounter++);
             }
         }
 
-        if(pos.x != gridWidth -1){
+        if(pos.x < gridWidth - 1){
             PathNode front = grid[pos.x + 1, pos.y];
-            if(front.IsWalkable() && !IsInClosedList(front)){
+            if(front.IsWalkable() && !IsInList(front, closedList) && !IsInList(front, openList)){
                 openList.AddFirst(front);
+
+                Debug.Log("front");
+                PathVisualizer.SpawnPathSprite(front, nodeCounter++);
             }
         }
     }
 
-    private bool IsInClosedList(PathNode node){
-        foreach(PathNode visitedNode in closedList){
-            if(node.id == visitedNode.id){
+    private bool IsInList(PathNode node, LinkedList<PathNode> list){
+        foreach(PathNode listNode in list){
+            if(node.id == listNode.id){
                 return true;
             }
         }
