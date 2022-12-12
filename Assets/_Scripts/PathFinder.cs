@@ -11,7 +11,10 @@ public class PathFinder : MonoBehaviour
     // A representation of the game area's graph
     [SerializeField] private static PathNode[,] grid;
 
+    MySolver<PathNode, System.Object> aStarSolver;
+
     // As listas aberta e fechada para explorar o caminho ótimo
+    // PriorityQueue<PathNode> openList;
     LinkedList<PathNode> openList;
     LinkedList<PathNode> closedList;
 
@@ -21,6 +24,21 @@ public class PathFinder : MonoBehaviour
     private bool hitTarget;
     private int nodeCounter;
 
+    public class MySolver<TPathNode, TUserContext> : SettlersEngine.SpatialAStar<TPathNode, 
+	TUserContext> where TPathNode : SettlersEngine.IPathNode<TUserContext>
+	{
+		public MySolver(TPathNode[,] inGrid): base(inGrid){}
+
+		protected override Double Heuristic(PathNode inStart, PathNode inEnd)
+		{
+			return 0;
+		}
+		
+		protected override Double NeighborDistance(PathNode inStart, PathNode inEnd)
+		{
+			return 0;
+		}
+	} 
 
     private void Awake() {
         if(grid == null){
@@ -36,6 +54,8 @@ public class PathFinder : MonoBehaviour
         closedList = new LinkedList<PathNode>();
 
         neighborNodes = new NeighborNodes();
+
+        aStarSolver = new MySolver<PathNode, System.Object>(grid);
     }
 
     private PathNode GetNodeFromPos(Vector2 pos){
@@ -45,15 +65,16 @@ public class PathFinder : MonoBehaviour
         return grid[x, y];
     }
 
-    public Path FindOptimalPath(Vector2 currentPos, Vector2 targetPos){
+    public IEnumerable<PathNode> FindOptimalPath(Vector2 currentPos, Vector2 targetPos){
         PathNode currentNode = GetNodeFromPos(currentPos);
         PathNode targetNode = GetNodeFromPos(targetPos);
 
-        Path optimalPath = new Path(currentNode, targetNode);
-        
-        StartCoroutine(CalculatePath(optimalPath));
+        // Path optimalPath = new Path(currentNode, targetNode);
+        // StartCoroutine(CalculatePath(optimalPath));
 
-        return optimalPath;
+        IEnumerable<PathNode> path = aStarSolver.Search(currentPos, targetPos, null);
+        
+        return path;
     }
 
 
@@ -67,7 +88,7 @@ public class PathFinder : MonoBehaviour
             openList.RemoveFirst();
             closedList.AddFirst(nextNode);
 
-            optimalPath.iterationPath.AddFirst(nextNode);
+            optimalPath.pathList.AddFirst(nextNode);
 
             if(nextNode.Equals(optimalPath.targetNode)){
                 Debug.Log("Achei!");
@@ -97,7 +118,7 @@ public class PathFinder : MonoBehaviour
             neighborNodes.dictionary["front"] = grid[pos.x + 1, pos.y];
         }
         foreach(KeyValuePair<string, PathNode> node in neighborNodes.dictionary){
-            if(node.Value != null && node.Value.IsWalkable()){
+            if(node.Value != null && node.Value.IsWalkable(gameObject)){
                 if(!InList(node.Value, closedList) && !InList(node.Value, openList)){
                     aStar(node.Value);
                 }
@@ -106,8 +127,8 @@ public class PathFinder : MonoBehaviour
     }
 
     private void aStar(PathNode node){
-        PriorityQueue
-        openList.AddFirst(node);
+        //PriorityQueue
+        //openList.Push(node);
         PathVisualizer.SpawnPathSprite(node, nodeCounter++);
     }
 

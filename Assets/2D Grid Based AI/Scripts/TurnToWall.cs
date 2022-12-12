@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace SaadKhawaja{
 public class TurnToWall : MonoBehaviour {
 
 	public GameManager Game;
@@ -22,4 +23,4 @@ public class TurnToWall : MonoBehaviour {
 			this.GetComponent<Renderer>().material.color = Color.white;
 		}
 	}
-}
+}}

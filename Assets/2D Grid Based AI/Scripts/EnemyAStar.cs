@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+namespace SaadKhawaja{
 public class EnemyAStar : MonoBehaviour {
 	public GameManager Game;
 	public MyPathNode nextNode;
@@ -250,4 +251,4 @@ public class EnemyAStar : MonoBehaviour {
 		isMoving = false;
 		GameObject.Find(startGridPosition.x + "," + startGridPosition.y).GetComponent<Renderer>().material.color = Color.black; 
 	}
-}
+}}

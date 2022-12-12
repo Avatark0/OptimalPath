@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 public class Enemy : MonoBehaviour
-{ 
+{
     public PathFinder pathFinder;
 
     public Vector2 currentPos;
@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public float movSpeed;
     public bool isMoving;
 
-    private Path myPath;
+    private IEnumerable<PathNode> myPath;
     private bool hasPath;
 
     void Start(){
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
             myPath = pathFinder.FindOptimalPath(currentPos, targetPos);
             hasPath = true;
         }
-        else if(myPath.reachesTarget){
+        else {
             move();
         }
     }
@@ -39,6 +39,6 @@ public class Enemy : MonoBehaviour
     private void move(){
         isMoving = true;
 
-        Debug.Log($"I'm moving from {currentPos} to {myPath.pathList.First}");
+        Debug.Log($"I'm moving from {currentPos} to ");
     }
 }

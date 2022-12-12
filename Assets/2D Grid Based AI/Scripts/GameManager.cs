@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+namespace SaadKhawaja{
 public class GameManager : MonoBehaviour {
 	public MyPathNode[,] grid;
 	public GameObject enemy;
@@ -108,4 +109,4 @@ public class GameManager : MonoBehaviour {
 	{
 		grid [x, y].IsWall = false;
 	}
-}
+}}
