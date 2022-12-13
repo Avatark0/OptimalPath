@@ -8143,6 +8143,10 @@ PrefabInstance:
       propertyPath: myPath
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2360758921526702134, guid: 4c66a81c7b036a84084d131193b917dc, type: 3}
+      propertyPath: movSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4852433820306087031, guid: 4c66a81c7b036a84084d131193b917dc, type: 3}
       propertyPath: pathVisualizerObject
       value: 
@@ -10581,11 +10585,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2902613228161326116, guid: 99cc44859f5fd104aafde50ffd849b8f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2902613228161326116, guid: 99cc44859f5fd104aafde50ffd849b8f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2902613228161326116, guid: 99cc44859f5fd104aafde50ffd849b8f, type: 3}
       propertyPath: m_LocalPosition.z

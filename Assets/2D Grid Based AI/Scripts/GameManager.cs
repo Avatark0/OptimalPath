@@ -72,7 +72,8 @@ public class GameManager : MonoBehaviour {
 		}
 		if(GUI.Button(new Rect(0f,60f,200f,50f),"Reload"))
 		{
-			Application.LoadLevel(Application.loadedLevel);
+			//Application.LoadLevel(Application.loadedLevel);
+			Debug.Log("Reload is disabled in script");
 		}
 
 		GUI.Label(new Rect(5f,120f,200f,200f),"Click on the grid to place a wall/tower.\nYou can change the distance formula of the path to Euclidean, " +

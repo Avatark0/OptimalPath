@@ -131,10 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathFinder: {fileID: 0}
-  currentPos: {x: 0, y: 0}
-  targetPos: {x: 0, y: 0}
-  movSpeed: 0
-  isMoving: 0
+  movSpeed: 1
+  proximityThereshold: 0.1
 --- !u!114 &4852433820306087031
 MonoBehaviour:
   m_ObjectHideFlags: 0

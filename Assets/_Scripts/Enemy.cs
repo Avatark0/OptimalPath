@@ -6,39 +6,62 @@ using System;
 public class Enemy : MonoBehaviour
 {
     public PathFinder pathFinder;
+    private LinkedList<PathNode> myPath;
+    
+    private int nodeCount;
 
-    public Vector2 currentPos;
-    public Vector2 targetPos;
+    private bool hasPath;
+    private bool reachedNextNode;
+    private bool reachedTarget;
+
+    private Vector2 targetPos;
 
     public float movSpeed;
-    public bool isMoving;
-
-    private IEnumerable<PathNode> myPath;
-    private bool hasPath;
+    public float proximityThereshold;
 
     void Start(){
         if(pathFinder == null){
             pathFinder = GetComponent<PathFinder>();
         }
 
-        currentPos = transform.position;
         targetPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
     }
 
     void Update()
     {
-        if(!hasPath){
-            myPath = pathFinder.FindOptimalPath(currentPos, targetPos);
-            hasPath = true;
-        }
-        else {
-            move();
-        }
-    }
+        if(!reachedTarget){
+            if(!hasPath){
+                myPath = pathFinder.FindOptimalPath(transform.position, targetPos);
+                
+                myPath.RemoveFirst();
+                if(myPath.Count == 0){
+                    reachedTarget = true;
+                } 
+                else {
+                    hasPath = true;
 
-    private void move(){
-        isMoving = true;
-
-        Debug.Log($"I'm moving from {currentPos} to ");
+                    nodeCount = myPath.Count;
+                    foreach(PathNode node in myPath){
+                        PathVisualizer.SpawnPathSprite(node, nodeCount--);
+                    }
+                }
+            }
+            else if(!reachedNextNode){
+                Vector2 pos = new Vector2(transform.position.x, transform.position.y);
+                Vector2 distanceToNextNode = myPath.First.Value.pos - pos;
+                if(distanceToNextNode.magnitude < proximityThereshold){
+                    reachedNextNode = true;
+                }
+                transform.Translate(distanceToNextNode.normalized * movSpeed * Time.deltaTime);
+            }
+            else {
+                reachedNextNode = false;
+                
+                myPath.RemoveFirst();
+                if(myPath.Count == 0){
+                    reachedTarget = true;
+                }
+            } 
+        }
     }
 }

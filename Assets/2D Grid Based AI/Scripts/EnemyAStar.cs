@@ -25,7 +25,6 @@ namespace SaadKhawaja{
 public class EnemyAStar : MonoBehaviour {
 	public GameManager Game;
 	public MyPathNode nextNode;
-	bool gray = false;
 	public MyPathNode[,] grid;
 
 	public gridPosition currentGridPosition = new gridPosition();
