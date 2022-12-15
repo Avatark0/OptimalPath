@@ -5,11 +5,30 @@ using UnityEngine;
 public class WallSpawner : MonoBehaviour
 {
     public GameObject wall;
+    public delegate void AddWallAction();
+    public static event AddWallAction AddWall;
+    public delegate void RemoveWallAction();
+    public static event RemoveWallAction RemoveWall;
     
     void Update()
     {
         if(Input.GetMouseButtonDown(0)){
-            Instantiate(wall, spawnPos(), Quaternion.identity, transform);
+            Vector3 pos = spawnPos();
+            if(PathFinder.IsWalkable(pos)){
+                Instantiate(wall, pos, Quaternion.identity, transform);
+                PathFinder.AddWall(pos);
+                if(AddWall != null){
+                   AddWall();
+                }
+            }
+            else {
+                PathFinder.RemoveWall(pos);
+                if(RemoveWall != null){
+                   RemoveWall();
+                }
+                // Destruir objeto parede no local!
+                Debug.Log($"Destruir parede em {pos}");
+            }
         }
     }
 

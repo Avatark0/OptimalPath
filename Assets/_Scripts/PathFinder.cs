@@ -42,4 +42,16 @@ public class PathFinder : MonoBehaviour
        
         return grid[x, y];
     }
+
+    public static void AddWall(Vector2 pos){
+        grid[Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)].AddWall();
+    }
+
+    public static void RemoveWall(Vector2 pos){
+        grid[Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)].RemoveWall();
+    }
+
+    public static bool IsWalkable(Vector2 pos){
+        return grid[Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)].IsWalkable(null);
+    }
 }

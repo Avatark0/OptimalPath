@@ -23,4 +23,12 @@ public class PathNode : SettlersEngine.IPathNode<System.Object>, SettlersEngine.
     public bool IsWalkable(System.Object unused){
         return !isWall;
     }
+
+    public void AddWall(){
+        isWall = true;
+    }
+
+    public void RemoveWall(){
+        isWall = false;
+    }
 }

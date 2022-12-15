@@ -13,13 +13,14 @@ public class Enemy : MonoBehaviour
     private bool hasPath;
     private bool reachedNextNode;
     private bool reachedTarget;
+    private bool recalculatePath;
 
     private Vector2 targetPos;
 
     public float movSpeed;
     public float proximityThereshold;
 
-    void Start(){
+    private void Start(){
         if(pathFinder == null){
             pathFinder = GetComponent<PathFinder>();
         }
@@ -27,7 +28,7 @@ public class Enemy : MonoBehaviour
         targetPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
     }
 
-    void Update()
+    private void Update()
     {
         if(!reachedTarget){
             if(!hasPath){
@@ -52,6 +53,8 @@ public class Enemy : MonoBehaviour
                 if(distanceToNextNode.magnitude < proximityThereshold){
                     reachedNextNode = true;
                 }
+
+                // Move to target
                 transform.Translate(distanceToNextNode.normalized * movSpeed * Time.deltaTime);
             }
             else {
@@ -61,7 +64,36 @@ public class Enemy : MonoBehaviour
                 if(myPath.Count == 0){
                     reachedTarget = true;
                 }
-            } 
+            }
+
+            if(recalculatePath){
+                hasPath = false;
+                recalculatePath = false;
+                targetPos = GameObject.FindGameObjectsWithTag("Target")[0].transform.position;
+            }
         }
+        else{
+            Debug.Log("I reached my target and will selfdestruct!");
+
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        Destroy(other.gameObject);
+    }
+
+    private void OnEnable() {
+        Target.TargetMoved += RecalculatePath;
+        WallSpawner.AddWall += RecalculatePath;
+    }
+
+    private void OnDisable() {
+        Target.TargetMoved -= RecalculatePath;
+        WallSpawner.AddWall -= RecalculatePath;
+    }
+
+    public void RecalculatePath(){
+        recalculatePath = true;
     }
 }

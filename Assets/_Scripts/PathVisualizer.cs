@@ -17,6 +17,6 @@ public class PathVisualizer : MonoBehaviour
     public static void SpawnPathSprite(PathNode node, int orderAdded){
         Vector3 pos = new Vector3(node.x, node.y, 0);
         GameObject sprite = GameObject.Instantiate(pathSprite, pos, Quaternion.identity, parent);
-        sprite.GetComponent<Text>().text = orderAdded.ToString();
+        sprite.GetComponent<Text>().text = (orderAdded - 1f).ToString();
     }
 }
