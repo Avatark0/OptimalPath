@@ -24,11 +24,7 @@ public class PathNode : SettlersEngine.IPathNode<System.Object>, SettlersEngine.
         return !isWall;
     }
 
-    public void AddWall(){
-        isWall = true;
-    }
-
-    public void RemoveWall(){
-        isWall = false;
+    public void IsWall(bool _isWall){
+        isWall = _isWall;
     }
 }

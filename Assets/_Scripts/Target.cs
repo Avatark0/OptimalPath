@@ -5,7 +5,7 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     public delegate void TargetMovedAction();
-    public static event TargetMovedAction TargetMoved;
+    public static event TargetMovedAction TargetMovedEvent;
 
     private Vector3 position;
 
@@ -16,8 +16,8 @@ public class Target : MonoBehaviour
     private void Update() {
         if(position != transform.position){
             position = transform.position;
-            if(TargetMoved != null){
-                TargetMoved();
+            if(TargetMovedEvent != null){
+                TargetMovedEvent();
             }
         }    
     }

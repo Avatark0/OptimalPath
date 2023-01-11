@@ -43,7 +43,9 @@ public class Enemy : MonoBehaviour
 
                     nodeCount = myPath.Count;
                     foreach(PathNode node in myPath){
-                        PathVisualizer.SpawnPathSprite(node, nodeCount--);
+                        if(nodeCount != 1){
+                            PathVisualizer.SpawnPathSprite(node, nodeCount--);
+                        }
                     }
                 }
             }
@@ -84,13 +86,13 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnEnable() {
-        Target.TargetMoved += RecalculatePath;
-        WallSpawner.AddWall += RecalculatePath;
+        Target.TargetMovedEvent += RecalculatePath;
+        WallSpawner.ToggleWallEvent += RecalculatePath;
     }
 
     private void OnDisable() {
-        Target.TargetMoved -= RecalculatePath;
-        WallSpawner.AddWall -= RecalculatePath;
+        Target.TargetMovedEvent -= RecalculatePath;
+        WallSpawner.ToggleWallEvent -= RecalculatePath;
     }
 
     public void RecalculatePath(){

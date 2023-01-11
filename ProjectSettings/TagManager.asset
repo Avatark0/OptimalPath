@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PathFinder
   - Target
+  - Wall
   layers:
   - Default
   - TransparentFX

@@ -5,34 +5,38 @@ using UnityEngine;
 public class WallSpawner : MonoBehaviour
 {
     public GameObject wall;
-    public delegate void AddWallAction();
-    public static event AddWallAction AddWall;
-    public delegate void RemoveWallAction();
-    public static event RemoveWallAction RemoveWall;
+    public delegate void ToggleWallAction();
+    public static event ToggleWallAction ToggleWallEvent;
     
     void Update()
     {
         if(Input.GetMouseButtonDown(0)){
-            Vector3 pos = spawnPos();
+            Vector3 pos = mousePos();
+            Debug.Log($"WallSpawner: wall pos = {pos}");
             if(PathFinder.IsWalkable(pos)){
+                SinalizeWallToggleEvent();
+                PathFinder.AddWallOnGrid(pos);
                 Instantiate(wall, pos, Quaternion.identity, transform);
-                PathFinder.AddWall(pos);
-                if(AddWall != null){
-                   AddWall();
-                }
             }
             else {
-                PathFinder.RemoveWall(pos);
-                if(RemoveWall != null){
-                   RemoveWall();
-                }
-                // Destruir objeto parede no local!
-                Debug.Log($"Destruir parede em {pos}");
+                SinalizeWallToggleEvent();
+                PathFinder.RemoveWallOnGrid(pos);
+                foreach(GameObject wall in GameObject.FindGameObjectsWithTag("Wall")){
+                    if(wall.transform.position == pos){
+                        Destroy(wall);
+                    }
+                } 
             }
         }
     }
 
-    private Vector3 spawnPos(){
+    private void SinalizeWallToggleEvent(){
+        if(ToggleWallEvent != null){
+            ToggleWallEvent();
+        }
+    }
+
+    private Vector3 mousePos(){
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int x = Mathf.RoundToInt(pos.x);
         int y = Mathf.RoundToInt(pos.y);

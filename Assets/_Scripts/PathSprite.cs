@@ -5,11 +5,13 @@ using UnityEngine;
 public class PathSprite : MonoBehaviour
 {
     private void OnEnable() {
-        Target.TargetMoved += Selfdestruct;
+        Target.TargetMovedEvent += Selfdestruct;
+        WallSpawner.ToggleWallEvent += Selfdestruct;
     }
 
     private void OnDisable() {
-        Target.TargetMoved -= Selfdestruct;
+        Target.TargetMovedEvent -= Selfdestruct;
+        WallSpawner.ToggleWallEvent -= Selfdestruct;
     }
 
     public void Selfdestruct(){
